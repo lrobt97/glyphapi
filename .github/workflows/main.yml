@@ -1,6 +1,17 @@
-- name: Pytest 
-  # You may pin to the exact commit or the version.
-  uses: dariocurr/pytest-summary@v1
-  with:
-    # The path to the folder containing the tests
-    paths: ..
+name: Unit Tests
+on:
+  pull_request:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    steps:
+    - name: Pytest 
+      uses: dariocurr/pytest-summary@v1
+      with:
+        # The path to the folder containing the tests
+        paths: ..
