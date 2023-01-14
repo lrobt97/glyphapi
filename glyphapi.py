@@ -4,6 +4,7 @@ import numpy
 from scipy.stats import norm
 app = Flask(__name__)
 
+# test
 # Request Object:
 # {
 #   rarity: float (required)
