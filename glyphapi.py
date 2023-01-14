@@ -152,3 +152,6 @@ def effectCountProbabilityModel(threshold, strength, level, effectCount, isEffar
         if (level < threshold): probabilityOfEffectCount = numpy.max([numpy.min([uniformDistributionTargetBounds[1], 1]) - uniformDistributionTargetBounds[0], 0])
         else: probabilityOfEffectCount = numpy.max([numpy.min([uniformDistributionTargetBounds[0], 1]) - uniformDistributionTargetBounds[1], 0])
         return probabilityOfEffectCount
+
+if __name__ == "__main__":
+   app.run(host='0.0.0.0', port=5000)

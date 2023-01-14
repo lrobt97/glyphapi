@@ -120,6 +120,13 @@ effectCountTestCases = [
    }, "34.21"),
    ({
    "ru17": "true",
+   "rarity": "100",
+   "level": "30000",
+   "numberOfEffects": "7", 
+   "isEffarig": "true"  
+   }, "56.14"),
+   ({
+   "ru17": "true",
    "rarity": "40",
    "level": "5",
    "numberOfEffects": "2",
