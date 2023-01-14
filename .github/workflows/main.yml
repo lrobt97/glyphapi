@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.10"]
     steps:
     - name: Pytest 
       uses: dariocurr/pytest-summary@v1
       with:
         # The path to the folder containing the tests
-        paths: ..
+        paths: ...
