@@ -99,7 +99,7 @@ def calculateRarityProbability():
 # }
 #
 # Note: this method is agnostic to any logic involving minimum glyph rarity thresholds
-@app.route("/effectCountProbabilityCalclulator", methods = ["POST"])
+@app.route("/effectCountProbabilityCalculator", methods = ["POST"])
 def calculateEffectCountProbability():
     input = request.get_json()
     ru17 = True
