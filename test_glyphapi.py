@@ -5,7 +5,7 @@ import pytest
 
 getThresholdEndpoint = "/threshold"
 rarityProbabilityCalculatorEndpoint = "/rarityProbabilityCalculator"
-effectCountProbabilityCalculatorEndpoint = "effectCountProbabilityCalclulator"
+effectCountProbabilityCalculatorEndpoint = "effectCountProbabilityCalculator"
 
 # Test inputs defined here
 
