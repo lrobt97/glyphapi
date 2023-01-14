@@ -31,7 +31,7 @@ The API currently has three endpoints:
 ```
 
 
-**/effectCountProbabilityCalclulator**
+**/effectCountProbabilityCalculator**
 ```
 // Request
 {
