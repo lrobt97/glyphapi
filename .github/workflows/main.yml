@@ -10,5 +10,6 @@ jobs:
       matrix:
         python-version: ["3.10"]
     steps:
-    - name: Pytest 
-      uses: dariocurr/pytest-summary@v1
+    - name: actions-pytest
+      uses: xoviat/actions-pytest@0.1-alpha2
+      
