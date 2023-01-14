@@ -14,4 +14,4 @@ jobs:
       uses: dariocurr/pytest-summary@v1
       with:
         # The path to the folder containing the tests
-        paths: ...
+        paths: test_glyphapi.py
