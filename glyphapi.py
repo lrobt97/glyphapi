@@ -58,25 +58,23 @@ def calculateRarityProbability():
             return { "status": "One or more inputs were invalid, please check and try again." }   
 
         if "ru16" in input:
-            ru16 = input["ru16"] == "true"    
+            ru16 = input["ru16"] == "true" or input["ru16"] == True
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
     
     # The minimum value a normally distributed variable would need to be for the required rarity
-    minimumStrength = 2.5 * rarity / 100 + 1 - bonus
+    minimumNormalVariable = 2.5 * (rarity - bonus) / 100 + 1 
     if ru16:
-        minimumStrength /= 1.3
+        minimumNormalVariable /= 1.3
 
-    # The theoretical minimum rarity that could be generated
+    # The theoretical minimum rarity that could be generated, corresponds to a normal value of 1
     theoreticalMinimum = numpy.min([1.3 + bonus/40, 3.5]) if ru16 else numpy.min([1 + bonus/40, 3.5])
-
-
-    if minimumStrength < theoreticalMinimum:
+    if minimumNormalVariable < 1:
         theoreticalMinimumRarity = numpy.round(numpy.ceil(400*((theoreticalMinimum - 1) * 100 / 2.5)) / 400, 1)
         return { "status": f"The given rarity would be impossible, however you are guaranteed a better rarity of {theoreticalMinimumRarity}%"}
     
-    z = minimumStrength ** (1 / 0.65) - 1
+    z = minimumNormalVariable ** (1 / 0.65) - 1
     probabilityOfRarity = 2 * (1 - norm.cdf(z))
     probabilityOfRarity = numpy.round(probabilityOfRarity * 100, 2)
     if probabilityOfRarity < 0.01:
@@ -110,7 +108,7 @@ def calculateEffectCountProbability():
             return { "status": "Minimum rarity, target level and effect count must be specified." }
 
         if "isEffarig" in input:
-            isEffarig = input["isEffarig"] == "true"
+            isEffarig = input["isEffarig"] == "true" or input["isEffarig"] == True
 
         level = int(input["level"])
         rarity = float(input["rarity"])
@@ -122,7 +120,7 @@ def calculateEffectCountProbability():
             return { "status": "You cannot get the specified number of effects on this type of glyph, consider checking your input."}
 
         if "ru17" in input:
-            ru17 = input["ru17"] == "true"
+            ru17 = input["ru17"] == "true" or input["ru17"] == True
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
