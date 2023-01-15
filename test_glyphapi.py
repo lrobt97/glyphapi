@@ -55,11 +55,18 @@ nearlyImpossibleProbabilityRequest = {
    "level": "1",
 }
 
-validProbabilityRarityCalculatorRequest = {
-   "bonus": "0",
-   "ru16": "true", 
-   "rarity": "100",
-}
+validProbabilityRarityCalculatorRequest = [
+    ({
+        "bonus": "0",
+        "ru16": "true", 
+        "rarity": "100",
+    }, 0.03),
+    ({
+        "ru16": True,
+        "bonus": 44,
+        "rarity": 100
+    }, 11.68)
+]
 
 belowMinimumRarityRequests = [
     ({
@@ -68,6 +75,13 @@ belowMinimumRarityRequests = [
         "ru16": "true"
     },
     12.0
+    ),
+    ({
+        "ru16": "true",
+        "bonus": "10",
+        "rarity": "11"
+    }, 
+    "22.0"
     ),
     ({
         "rarity": "0",
@@ -119,11 +133,11 @@ effectCountTestCases = [
    "numberOfEffects": "2",
    }, "34.21"),
    ({
-   "ru17": "true",
+   "ru17": True,
    "rarity": "100",
    "level": "30000",
    "numberOfEffects": "7", 
-   "isEffarig": "true"  
+   "isEffarig": True  
    }, "56.14"),
    ({
    "ru17": "true",
@@ -226,13 +240,14 @@ def test_calculateRarityProbability_nearlyImpossibleGlyph():
     response = app.test_client().post(rarityProbabilityCalculatorEndpoint, json = nearlyImpossibleProbabilityRequest)
     assert response.json["status"] == "A glyph with the given rarity would have a probability below 0.01%."
 
-def test_calculateRarityProbability_validRequest():
-    response = app.test_client().post(rarityProbabilityCalculatorEndpoint, json = validProbabilityRarityCalculatorRequest)
-    assert response.json["status"] == "A glyph with the given rarity, or better, would have a probability of 0.03%."
-
 def test_calculateRarityProbability_missingInput():
     response = app.test_client().post(rarityProbabilityCalculatorEndpoint, json = { "level": "1" })
     assert response.json["status"] == "Minimum rarity must be specified."
+
+@pytest.mark.parametrize("test_input, expected_value", validProbabilityRarityCalculatorRequest)
+def test_calculateRarityProbability_validRequest(test_input, expected_value):
+    response = app.test_client().post(rarityProbabilityCalculatorEndpoint, json = test_input)
+    assert response.json["status"] == f"A glyph with the given rarity, or better, would have a probability of {expected_value}%."
 
 @pytest.mark.parametrize("test_input, expected_minimumRarity", belowMinimumRarityRequests)
 def test_calculateRarityProbability_belowMinimumRarity(test_input, expected_minimumRarity):
