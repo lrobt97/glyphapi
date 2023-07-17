@@ -58,7 +58,7 @@ def calculateRarityProbability():
             return { "status": "One or more inputs were invalid, please check and try again." }   
 
         if "ru16" in input:
-            ru16 = input["ru16"] == "true"    
+            ru16 = input["ru16"]    
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
@@ -110,7 +110,7 @@ def calculateEffectCountProbability():
             return { "status": "Minimum rarity, target level and effect count must be specified." }
 
         if "isEffarig" in input:
-            isEffarig = input["isEffarig"] == "true"
+            isEffarig = input["isEffarig"]
 
         level = int(input["level"])
         rarity = float(input["rarity"])
@@ -122,7 +122,7 @@ def calculateEffectCountProbability():
             return { "status": "You cannot get the specified number of effects on this type of glyph, consider checking your input."}
 
         if "ru17" in input:
-            ru17 = input["ru17"] == "true"
+            ru17 = input["ru17"]
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
@@ -138,8 +138,10 @@ def calculateEffectCountProbability():
         if not ru17:
             probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig)
         else:
-            if numberOfEffects == 2:
+            if numberOfEffects == 2 and level > threshold:
                 probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) * 0.5
+            elif level < threshold:
+                probabilityOfEffectCount = (1 - 0.5 * (not numberOfEffects == 2)) * effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) + 0.5 * effectCountProbabilityModel(threshold, strength, level, numberOfEffects - 1, isEffarig)
             else:
                 probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) * (1 - 0.5 * ( not ( ( not isEffarig and numberOfEffects == 4 )  or ( isEffarig and numberOfEffects == 7 )) ) ) + effectCountProbabilityModel(threshold, strength, level, numberOfEffects - 1, isEffarig) * 0.5
     else:
