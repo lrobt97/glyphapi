@@ -58,23 +58,25 @@ def calculateRarityProbability():
             return { "status": "One or more inputs were invalid, please check and try again." }   
 
         if "ru16" in input:
-            ru16 = input["ru16"] == "true" or input["ru16"] == True
+            ru16 = input["ru16"] == "true"    
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
     
     # The minimum value a normally distributed variable would need to be for the required rarity
-    minimumNormalVariable = 2.5 * (rarity - bonus) / 100 + 1 
+    minimumStrength = 2.5 * rarity / 100 + 1 - bonus
     if ru16:
-        minimumNormalVariable /= 1.3
+        minimumStrength /= 1.3
 
-    # The theoretical minimum rarity that could be generated, corresponds to a normal value of 1
+    # The theoretical minimum rarity that could be generated
     theoreticalMinimum = numpy.min([1.3 + bonus/40, 3.5]) if ru16 else numpy.min([1 + bonus/40, 3.5])
-    if minimumNormalVariable < 1:
+
+
+    if minimumStrength < theoreticalMinimum:
         theoreticalMinimumRarity = numpy.round(numpy.ceil(400*((theoreticalMinimum - 1) * 100 / 2.5)) / 400, 1)
         return { "status": f"The given rarity would be impossible, however you are guaranteed a better rarity of {theoreticalMinimumRarity}%"}
     
-    z = minimumNormalVariable ** (1 / 0.65) - 1
+    z = minimumStrength ** (1 / 0.65) - 1
     probabilityOfRarity = 2 * (1 - norm.cdf(z))
     probabilityOfRarity = numpy.round(probabilityOfRarity * 100, 2)
     if probabilityOfRarity < 0.01:
@@ -97,7 +99,7 @@ def calculateRarityProbability():
 # }
 #
 # Note: this method is agnostic to any logic involving minimum glyph rarity thresholds
-@app.route("/effectCountProbabilityCalculator", methods = ["POST"])
+@app.route("/effectCountProbabilityCalclulator", methods = ["POST"])
 def calculateEffectCountProbability():
     input = request.get_json()
     ru17 = True
@@ -108,7 +110,7 @@ def calculateEffectCountProbability():
             return { "status": "Minimum rarity, target level and effect count must be specified." }
 
         if "isEffarig" in input:
-            isEffarig = input["isEffarig"] == "true" or input["isEffarig"] == True
+            isEffarig = input["isEffarig"] == "true"
 
         level = int(input["level"])
         rarity = float(input["rarity"])
@@ -120,7 +122,7 @@ def calculateEffectCountProbability():
             return { "status": "You cannot get the specified number of effects on this type of glyph, consider checking your input."}
 
         if "ru17" in input:
-            ru17 = input["ru17"] == "true" or input["ru17"] == True
+            ru17 = input["ru17"] == "true"
 
     except:
         return { "status": "One or more inputs were invalid, please check and try again." }
@@ -136,7 +138,10 @@ def calculateEffectCountProbability():
         if not ru17:
             probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig)
         else:
-            probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) * (1 - 0.5 * ( not ( ( not isEffarig and numberOfEffects == 4 )  or ( isEffarig and numberOfEffects == 7 )) ) ) + effectCountProbabilityModel(threshold, strength, level, numberOfEffects - 1, isEffarig) * 0.5
+            if numberOfEffects == 2:
+                probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) * 0.5
+            else:
+                probabilityOfEffectCount = effectCountProbabilityModel(threshold, strength, level, numberOfEffects, isEffarig) * (1 - 0.5 * ( not ( ( not isEffarig and numberOfEffects == 4 )  or ( isEffarig and numberOfEffects == 7 )) ) ) + effectCountProbabilityModel(threshold, strength, level, numberOfEffects - 1, isEffarig) * 0.5
     else:
         response = "You have a 50/50 chance of getting 2 or 3 effects." if ru17 else "You can only get two effects at this level."
         return { "status":  response }
