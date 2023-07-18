@@ -82,7 +82,7 @@ def calculateRarityProbability():
     if probabilityOfRarity < 0.01:
         return { "status": "A glyph with the given rarity would have a probability below 0.01%." }
     else:
-        return { "status": f"A glyph with the given rarity, or better, would have a probability of {probabilityOfRarity}%." }
+        return { "status": f"A glyph with the given rarity ({rarity}), or better, would have a probability of {probabilityOfRarity}%." }
 
 # Request Object:
 # {
@@ -99,7 +99,7 @@ def calculateRarityProbability():
 # }
 #
 # Note: this method is agnostic to any logic involving minimum glyph rarity thresholds
-@app.route("/effectCountProbabilityCalclulator", methods = ["POST"])
+@app.route("/effectCountProbabilityCalculator", methods = ["POST"])
 def calculateEffectCountProbability():
     input = request.get_json()
     ru17 = True
@@ -148,7 +148,7 @@ def calculateEffectCountProbability():
         response = "You have a 50/50 chance of getting 2 or 3 effects." if ru17 else "You can only get two effects at this level."
         return { "status":  response }
     probabilityOfEffectCount = numpy.round(probabilityOfEffectCount * 100, 2)
-    return {"status": f"The probability of finding a glyph with the given rarity and the number of given effects is {probabilityOfEffectCount}%."}
+    return {"status": f"The probability of finding {'an Effarig' if isEffarig else 'a'} Glyph with the given rarity ({rarity}%) and the number of given effects ({numberOfEffects}) is {probabilityOfEffectCount}%."}
 
 def effectCountProbabilityModel(threshold, strength, level, effectCount, isEffarig):
         if effectCount <= 0: return 0
