@@ -65,17 +65,17 @@ def calculateRarityProbability():
     
     # The minimum value a normally distributed variable would need to be for the required rarity
     minimumStrength = 2.5 * rarity / 100 + 1 - bonus
-    if ru16:
-        minimumStrength /= 1.3
 
     # The theoretical minimum rarity that could be generated
     theoreticalMinimum = numpy.min([1.3 + bonus/40, 3.5]) if ru16 else numpy.min([1 + bonus/40, 3.5])
 
-
     if minimumStrength < theoreticalMinimum:
         theoreticalMinimumRarity = numpy.round(numpy.ceil(400*((theoreticalMinimum - 1) * 100 / 2.5)) / 400, 1)
         return { "status": f"The given rarity would be impossible, however you are guaranteed a better rarity of {theoreticalMinimumRarity}%"}
-    
+
+    if ru16:
+        minimumStrength /= 1.3
+        
     z = minimumStrength ** (1 / 0.65) - 1
     probabilityOfRarity = 2 * (1 - norm.cdf(z))
     probabilityOfRarity = numpy.round(probabilityOfRarity * 100, 2)
